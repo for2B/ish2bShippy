@@ -1,15 +1,15 @@
 package main
 
 import (
-
+	"context"
 	// Import the generated protobuf code
 	"fmt"
 	"log"
 
-	pb "github.com/EwanValentine/shippy/consignment-service/proto/consignment"
-	vesselProto "github.com/EwanValentine/shippy/vessel-service/proto/vessel"
+	vesselProto "ish2bShippy/vessel-service/proto/vessel"
 	micro "github.com/micro/go-micro"
-	"golang.org/x/net/context"
+
+	pb "ish2bShippy/consignment-service/proto/consignment"
 )
 
 type Repository interface {
