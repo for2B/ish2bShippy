@@ -6,5 +6,4 @@ require (
 	github.com/mattn/go-colorable v0.1.1 // indirect
 	github.com/micro/go-micro v1.1.0
 	golang.org/x/net v0.0.0-20190419010253-1f3472d942ba
-	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
