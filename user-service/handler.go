@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/keybase/go-crypto/bcrypt"
+	"github.com/micro/go-micro"
 	"golang.org/x/net/context"
 	pb "ish2bShippy/user-service/proto/user"
 	"log"
@@ -11,8 +12,9 @@ import (
 type service struct {
 	repo         Repository
 	tokenService Authable
+	Publisher    micro.Publisher
 }
-
+const topic = "user.created"
 func (srv *service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
 	user, err := srv.repo.Get(req.Id)
 	if err != nil {
@@ -65,6 +67,10 @@ func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 		return err
 	}
 	res.User = req
+	//发布信息
+	if err := srv.Publisher.Publish(ctx, req); err != nil {
+		return err
+	}
 	return nil
 }
 

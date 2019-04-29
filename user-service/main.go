@@ -40,7 +40,10 @@ func main() {
 	srv.Init()
 
 	// Register handler
-	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService})
+	//pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService})
+
+	publisher := micro.NewPublisher(topic, srv.Client())
+	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, publisher})
 
 	// Run the server
 	if err := srv.Run(); err != nil {
