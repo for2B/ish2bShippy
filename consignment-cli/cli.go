@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/micro/go-micro/metadata"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,7 +12,6 @@ import (
 	"github.com/micro/go-micro/cmd"
 	"golang.org/x/net/context"
 )
-
 const (
 	defaultFilename = "consignment.json"
 )
@@ -35,8 +35,10 @@ func main() {
 
 	// Contact the server and print out its response.
 	file := defaultFilename
+	var token string
 	if len(os.Args) > 1 {
 		file = os.Args[1]
+		token = os.Args[2]
 	}
 
 	consignment, err := parseFile(file)
@@ -45,13 +47,17 @@ func main() {
 		log.Fatalf("Could not parse file: %v", err)
 	}
 
-	r, err := client.CreateConsignment(context.TODO(), consignment)
+	ctx := metadata.NewContext(context.Background(), map[string]string{
+		"token": token,
+	})
+
+	r, err := client.CreateConsignment(ctx, consignment)
 	if err != nil {
 		log.Fatalf("Could not create: %v", err)
 	}
 	log.Printf("Created: %t", r.Created)
 
-	getAll, err := client.GetConsignments(context.Background(), &pb.GetRequest{})
+	getAll, err := client.GetConsignments(ctx, &pb.GetRequest{})
 	if err != nil {
 		log.Fatalf("Could not list consignments: %v", err)
 	}
